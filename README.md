@@ -777,6 +777,33 @@ npm run dev     # http://localhost:3000 で起動
 
 > バックエンドが起動していない場合、機器テンプレートの読み込みに失敗するが、UI 自体は表示される。
 
+### コンテナの停止
+
+```bash
+# コンテナを停止・削除（DB データは保持）
+docker compose down
+
+# 一時停止のみ（削除しない）
+docker compose stop
+```
+
+> DB データも含めて完全にリセットしたい場合は `docker compose down -v` を使用する（`postgres_data` ボリュームも削除される）。
+
+### 起動時のトラブルシューティング
+
+#### フロントエンドで `Failed to resolve import` エラーが出る場合
+
+`node_modules` の anonymous volume が古いまま残っている可能性がある。以下の手順で volume を再作成する。
+
+```bash
+docker compose down
+docker compose up --build --renew-anon-volumes
+```
+
+> `--renew-anon-volumes` オプションは anonymous volume（`/app/node_modules`）を強制的に再作成する。
+
+---
+
 ### CML なしでの動作確認（テンプレート API のみ）
 
 CML サーバーが不要なテンプレート取得 API は CML 接続なしで動作する。
