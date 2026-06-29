@@ -1,0 +1,56 @@
+system {
+    host-name {{ hostname }};
+{% if domain_name is defined and domain_name %}
+    domain-name {{ domain_name }};
+{% endif %}
+    time-zone {{ timezone | default('Asia/Tokyo') }};
+    root-authentication {
+        encrypted-password "{{ root_password | default('$6$changeme') }}";
+    }
+    login {
+        user admin {
+            uid 2000;
+            class super-user;
+            authentication {
+                encrypted-password "{{ root_password | default('$6$changeme') }}";
+            }
+        }
+    }
+    services {
+        ssh {
+            root-login allow;
+        }
+        netconf {
+            ssh;
+        }
+    }
+    syslog {
+        user * {
+            any emergency;
+        }
+        file messages {
+            any notice;
+            authorization info;
+        }
+    }
+}
+{% set ns = namespace(has_iface=false) %}
+{% for iface in interfaces %}{% if iface.has_ip %}{% set ns.has_iface = true %}{% endif %}{% endfor %}
+{% if ns.has_iface %}
+interfaces {
+{% for iface in interfaces %}
+{% if iface.has_ip %}
+    {{ iface.name }} {
+{% if iface.vrf_name %}
+        routing-instance {{ iface.vrf_name }};
+{% endif %}
+        unit 0 {
+            family inet {
+                address {{ iface.ip_address }}/{{ iface.prefix_length }};
+            }
+        }
+    }
+{% endif %}
+{% endfor %}
+}
+{% endif %}

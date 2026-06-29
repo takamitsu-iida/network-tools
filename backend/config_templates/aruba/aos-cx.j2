@@ -1,0 +1,28 @@
+hostname {{ hostname }}
+!
+{% if banner is defined and banner %}
+banner motd {{ banner }}
+{% endif %}
+!
+{% for iface in interfaces %}
+{% if iface.has_ip %}
+interface {{ iface.name }}
+{% if iface.vrf_name %}
+    vrf attach {{ iface.vrf_name }}
+{% endif %}
+    ip address {{ iface.ip_address }}/{{ iface.prefix_length }}
+    no shutdown
+!
+{% else %}
+interface {{ iface.name }}
+    no shutdown
+!
+{% endif %}
+{% endfor %}
+!
+{% if ntp_server is defined and ntp_server %}
+ntp server {{ ntp_server }}
+{% endif %}
+!
+ssh server vrf default
+!

@@ -1,0 +1,39 @@
+vendor: cisco
+os: ios
+device_type: router
+description: "Cisco IOS Virtual Router (IOSv)"
+node_definition: iosv
+default_ram: 512
+default_cpus: 1
+interfaces:
+  - name: GigabitEthernet0/0
+    type: ethernet
+    slot: 0
+  - name: GigabitEthernet0/1
+    type: ethernet
+    slot: 1
+  - name: GigabitEthernet0/2
+    type: ethernet
+    slot: 2
+  - name: GigabitEthernet0/3
+    type: ethernet
+    slot: 3
+config_parameters:
+  - name: hostname
+    type: string
+    required: true
+    description: "Device hostname"
+  - name: domain_name
+    type: string
+    required: false
+    default: "example.com"
+    description: "IP domain name"
+  - name: enable_secret
+    type: string
+    required: true
+    description: "Enable secret password"
+  - name: ssh_version
+    type: integer
+    required: false
+    default: 2
+    description: "SSH version"

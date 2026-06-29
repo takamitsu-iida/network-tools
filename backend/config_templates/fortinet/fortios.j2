@@ -1,0 +1,28 @@
+config system global
+    set hostname "{{ hostname }}"
+{% if timezone is defined and timezone %}
+    set timezone {{ timezone }}
+{% endif %}
+    set admin-sport 8443
+end
+
+config system admin
+    edit "admin"
+        set password {{ admin_password | default('fortinet') }}
+    next
+end
+
+{% for iface in interfaces %}
+{% if iface.has_ip %}
+config system interface
+    edit "{{ iface.name }}"
+        set ip {{ iface.ip_address }} {{ iface.netmask }}
+        set allowaccess ping https ssh
+{% if iface.vrf_name %}
+        set vrf {{ iface.vrf_name }}
+{% endif %}
+    next
+end
+
+{% endif %}
+{% endfor %}

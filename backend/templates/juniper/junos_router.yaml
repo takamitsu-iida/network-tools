@@ -1,0 +1,38 @@
+vendor: juniper
+os: junos
+device_type: router
+description: "Juniper vMX Virtual Router"
+node_definition: vmx
+default_ram: 4096
+default_cpus: 2
+interfaces:
+  - name: ge-0/0/0
+    type: ethernet
+    slot: 0
+  - name: ge-0/0/1
+    type: ethernet
+    slot: 1
+  - name: ge-0/0/2
+    type: ethernet
+    slot: 2
+  - name: fxp0
+    type: management
+    slot: 3
+config_parameters:
+  - name: hostname
+    type: string
+    required: true
+    description: "Device hostname"
+  - name: domain_name
+    type: string
+    required: false
+    description: "Domain name"
+  - name: root_password
+    type: string
+    required: true
+    description: "Root password"
+  - name: timezone
+    type: string
+    required: false
+    default: "Asia/Tokyo"
+    description: "System timezone"

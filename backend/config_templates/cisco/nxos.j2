@@ -1,0 +1,35 @@
+hostname {{ hostname }}
+!
+feature ssh
+feature telnet
+{% if feature_bgp is defined and feature_bgp %}
+feature bgp
+{% endif %}
+{% if feature_ospf is defined and feature_ospf %}
+feature ospf
+{% endif %}
+{% if feature_vlan is not defined or feature_vlan %}
+feature vlan
+{% endif %}
+!
+username admin password {{ enable_secret | default('cisco') }} role network-admin
+!
+{% for iface in interfaces %}
+{% if iface.has_ip %}
+interface {{ iface.name }}
+{% if iface.vrf_name %}
+  vrf member {{ iface.vrf_name }}
+{% endif %}
+  ip address {{ iface.ip_address }}/{{ iface.prefix_length }}
+  no shutdown
+!
+{% else %}
+interface {{ iface.name }}
+  no shutdown
+!
+{% endif %}
+{% endfor %}
+!
+line vty
+  exec-timeout 30
+!

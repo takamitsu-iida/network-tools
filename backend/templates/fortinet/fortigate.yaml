@@ -1,0 +1,34 @@
+vendor: fortinet
+os: fortios
+device_type: firewall
+description: "Fortinet FortiGate Virtual Firewall"
+node_definition: fortinet
+default_ram: 2048
+default_cpus: 2
+interfaces:
+  - name: port1
+    type: ethernet
+    slot: 0
+  - name: port2
+    type: ethernet
+    slot: 1
+  - name: port3
+    type: ethernet
+    slot: 2
+  - name: mgmt
+    type: management
+    slot: 3
+config_parameters:
+  - name: hostname
+    type: string
+    required: true
+    description: "Device hostname"
+  - name: admin_password
+    type: string
+    required: true
+    description: "Admin password"
+  - name: timezone
+    type: integer
+    required: false
+    default: 60
+    description: "Timezone (FortiOS timezone index, 60=Asia/Tokyo)"

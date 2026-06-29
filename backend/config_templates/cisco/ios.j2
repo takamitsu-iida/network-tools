@@ -1,0 +1,47 @@
+hostname {{ hostname }}
+!
+{% if domain_name is defined and domain_name %}
+ip domain name {{ domain_name }}
+{% else %}
+ip domain name example.com
+{% endif %}
+no ip domain-lookup
+!
+{% if enable_secret is defined and enable_secret %}
+enable secret {{ enable_secret }}
+{% endif %}
+!
+aaa new-model
+username admin privilege 15 secret {{ enable_secret | default('cisco') }}
+!
+! SSH を有効にするには以下を実行してください:
+!   crypto key generate rsa modulus 2048
+{% if ssh_version is defined and ssh_version %}
+ip ssh version {{ ssh_version }}
+{% else %}
+ip ssh version 2
+{% endif %}
+!
+{% for iface in interfaces %}
+{% if iface.has_ip %}
+interface {{ iface.name }}
+{% if iface.vrf_name %}
+ ip vrf forwarding {{ iface.vrf_name }}
+{% endif %}
+ ip address {{ iface.ip_address }} {{ iface.netmask }}
+ no shutdown
+!
+{% else %}
+interface {{ iface.name }}
+ no ip address
+ no shutdown
+!
+{% endif %}
+{% endfor %}
+!
+line vty 0 4
+ login local
+ transport input ssh
+ exec-timeout 30 0
+!
+end

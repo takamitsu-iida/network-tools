@@ -1,0 +1,43 @@
+vendor: cisco
+os: nxos
+device_type: switch
+description: "Cisco NX-OS Virtual Switch (NX-OSv)"
+node_definition: nxosv
+default_ram: 4096
+default_cpus: 2
+interfaces:
+  - name: Ethernet1/1
+    type: ethernet
+    slot: 0
+  - name: Ethernet1/2
+    type: ethernet
+    slot: 1
+  - name: Ethernet1/3
+    type: ethernet
+    slot: 2
+  - name: Ethernet1/4
+    type: ethernet
+    slot: 3
+  - name: mgmt0
+    type: management
+    slot: 4
+config_parameters:
+  - name: hostname
+    type: string
+    required: true
+    description: "Device hostname"
+  - name: feature_bgp
+    type: boolean
+    required: false
+    default: false
+    description: "Enable BGP feature"
+  - name: feature_ospf
+    type: boolean
+    required: false
+    default: false
+    description: "Enable OSPF feature"
+  - name: feature_vlan
+    type: boolean
+    required: false
+    default: true
+    description: "Enable VLAN feature"
