@@ -850,3 +850,59 @@ curl http://localhost:8000/api/v1/templates/cisco/iosv_router
 | **Phase 3** | Jinja2 による Config 自動生成・Monaco Editor プレビュー・CML へのプッシュ | **完了** |
 | **Phase 4** | トラフィックシミュレーション・障害シナリオ注入・グラフ可視化 | **完了** |
 | Phase 5 | セキュリティポリシー検証・冗長構成分析・Git バージョン管理・設計チェック | 未着手 |
+
+
+
+
+Container network-tools-db-1 Waiting
+db-1  |
+db-1  | PostgreSQL Database directory appears to contain a database; Skipping initialization
+db-1  |
+db-1  | 2026-06-29 11:55:22.966 UTC [1] LOG:  starting PostgreSQL 16.14 on x86_64-pc-linux-musl, compiled by gcc (Alpine 15.2.0) 15.2.0, 64-bit
+db-1  | 2026-06-29 11:55:22.967 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+db-1  | 2026-06-29 11:55:22.968 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+db-1  | 2026-06-29 11:55:22.974 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+db-1  | 2026-06-29 11:55:22.982 UTC [26] LOG:  database system was shut down at 2026-06-29 11:54:32 UTC
+db-1  | 2026-06-29 11:55:22.991 UTC [1] LOG:  database system is ready to accept connections
+Container network-tools-db-1 Healthy
+backend-1  | INFO:     Will watch for changes in these directories: ['/app']
+frontend-1  |
+frontend-1  | > network-tools-frontend@0.1.0 dev
+frontend-1  | > vite --host
+frontend-1  |
+
+frontend-1  |
+frontend-1  |   VITE v5.4.21  ready in 601 ms
+frontend-1  |
+
+
+backend-1   | INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+frontend-1  |   ➜  Local:   http://localhost:3000/
+frontend-1  |   ➜  Network: http://172.18.0.4:3000/
+backend-1   | INFO:     Started reloader process [1] using WatchFiles
+frontend-1  | 11:55:31 AM [vite] Internal server error: Failed to resolve import "./lib/chartSetup" from "src/main.tsx". Does the file exist?
+frontend-1  |   Plugin: vite:import-analysis
+backend-1   | INFO:     Started server process [7]
+
+
+frontend-1  |   File: /app/src/main.tsx:1:7
+backend-1   | INFO:     Waiting for application startup.
+frontend-1  |   1  |  import { jsxDEV } from "react/jsx-dev-runtime";
+backend-1   | INFO:     Application startup complete.
+
+frontend-1  |   2  |  import "./lib/chartSetup";
+frontend-1  |      |          ^
+frontend-1  |   3  |  import React from "react";
+frontend-1  |   4  |  import ReactDOM from "react-dom/client";
+frontend-1  |       at TransformPluginContext._formatError (file:///app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49258:41)
+frontend-1  |       at TransformPluginContext.error (file:///app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49253:16)
+frontend-1  |       at normalizeUrl (file:///app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64307:23)
+frontend-1  |       at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+frontend-1  |       at async file:///app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64439:39
+frontend-1  |       at async Promise.all (index 1)
+frontend-1  |       at async TransformPluginContext.transform (file:///app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:64366:7)
+frontend-1  |       at async PluginContainer.transform (file:///app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:49099:18)
+frontend-1  |       at async loadAndTransform (file:///app/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51978:27)
+frontend-1  | 11:55:31 AM [vite] Pre-transform error: Failed to resolve import "./lib/chartSetup" from "src/main.tsx". Does the file exist?
+frontend-1  | 11:55:33 AM [vite] Pre-transform error: Failed to resolve import "./lib/chartSetup" from "src/main.tsx". Does the file exist?
+frontend-1  | 11:55:33 AM [vite] Internal server error: Failed to resolve import "./lib/chartSetup" from "src/main.tsx". Does the file exist?
