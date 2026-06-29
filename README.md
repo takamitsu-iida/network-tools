@@ -850,3 +850,7 @@ curl http://localhost:8000/api/v1/templates/cisco/iosv_router
 | **Phase 3** | Jinja2 による Config 自動生成・Monaco Editor プレビュー・CML へのプッシュ | **完了** |
 | **Phase 4** | トラフィックシミュレーション・障害シナリオ注入・グラフ可視化 | **完了** |
 | Phase 5 | セキュリティポリシー検証・冗長構成分析・Git バージョン管理・設計チェック | 未着手 |
+
+
+母艦のマシンでこれが必要
+sudo sysctl -w net.ipv4.ip_forward=1
