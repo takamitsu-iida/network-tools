@@ -95,6 +95,8 @@ export default function TopologyEditor() {
         defaultEdgeOptions={{
           type: 'smoothstep',
           style: { stroke: '#64748b', strokeWidth: 2 },
+          interactionWidth: 20,
+          selectable: true,
         }}
         fitView
       >
