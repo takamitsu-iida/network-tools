@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   ReactFlow,
   Background,
@@ -9,6 +9,7 @@ import {
   type Connection,
   type ReactFlowInstance,
   type Node,
+  type Edge,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
@@ -33,6 +34,26 @@ export default function TopologyEditor() {
 
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
   const [rfInstance, setRfInstance] = useState<ReactFlowInstance | null>(null);
+  const [selectedEdgeId, setSelectedEdgeId] = useState<string | null>(null);
+
+  /** 選択中エッジにスタイルを付与 */
+  const styledEdges: Edge[] = edges.map((e) =>
+    e.id === selectedEdgeId
+      ? { ...e, style: { stroke: '#ef4444', strokeWidth: 3 } }
+      : { ...e, style: { stroke: '#64748b', strokeWidth: 2 } },
+  );
+
+  /** Delete / Backspace で選択中エッジを削除 */
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if ((e.key === 'Delete' || e.key === 'Backspace') && selectedEdgeId) {
+        setEdges(edges.filter((edge) => edge.id !== selectedEdgeId));
+        setSelectedEdgeId(null);
+      }
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [selectedEdgeId, edges, setEdges]);
 
   const onConnect = useCallback(
     (params: Connection) => setEdges(addEdge(params, edges)),
@@ -77,26 +98,32 @@ export default function TopologyEditor() {
     [rfInstance, addNode],
   );
 
+  const onEdgeClick = useCallback(
+    (_: React.MouseEvent, edge: { id: string }) => {
+      setSelectedEdgeId((prev) => (prev === edge.id ? null : edge.id));
+    },
+    [],
+  );
+
   return (
     <div ref={reactFlowWrapper} className="flex-1 h-full">
       <ReactFlow
         nodes={nodes}
-        edges={edges}
+        edges={styledEdges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
         onDrop={onDrop}
         onDragOver={onDragOver}
         onNodeClick={(_, node) => setSelectedNodeId(node.id)}
-        onPaneClick={() => setSelectedNodeId(null)}
+        onEdgeClick={onEdgeClick}
+        onPaneClick={() => { setSelectedNodeId(null); setSelectedEdgeId(null); }}
         nodeTypes={nodeTypes}
         connectionMode={ConnectionMode.Loose}
         onInit={setRfInstance}
         defaultEdgeOptions={{
           type: 'smoothstep',
           style: { stroke: '#64748b', strokeWidth: 2 },
-          interactionWidth: 20,
-          selectable: true,
         }}
         fitView
       >
