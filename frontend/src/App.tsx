@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import DevicePalette from './components/palette/DevicePalette';
 import TopologyEditor from './components/topology/TopologyEditor';
 import NetworkSettingsForm from './components/forms/NetworkSettingsForm';
@@ -12,20 +12,46 @@ import {
   edgeToEdgeData,
   type NodeConfigResponse,
 } from './api/configs';
+import { generateLayoutFromYaml } from './api/topologies';
+import type { Node, Edge } from '@xyflow/react';
+import type { DeviceNodeData } from './types';
 
 export default function App() {
-  const { setNodes, setEdges, nodes, edges } = useTopologyStore();
+  const { setNodes, setEdges, nodes, edges, selectedNodeId, deleteSelectedNode } = useTopologyStore();
   const [topologyTitle, setTopologyTitle] = useState('新規トポロジ');
   const [configs, setConfigs] = useState<NodeConfigResponse[]>([]);
   const [showConfigPanel, setShowConfigPanel] = useState(false);
   const [showSimPanel, setShowSimPanel] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [isPushing, setIsPushing] = useState(false);
+  const [isImporting, setIsImporting] = useState(false);
+  const yamlInputRef = useRef<HTMLInputElement>(null);
 
   const handleClear = () => {
     if (!window.confirm('現在のトポロジをクリアしますか？')) return;
     setNodes([]);
     setEdges([]);
+  };
+
+  /** YAMLファイルを選択してAIレイアウトを生成する */
+  const handleYamlImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    e.target.value = '';
+
+    setIsImporting(true);
+    try {
+      const yamlContent = await file.text();
+      const result = await generateLayoutFromYaml(yamlContent);
+      setNodes(result.nodes as Node<DeviceNodeData>[]);
+      setEdges(result.edges as Edge[]);
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error ? err.message : 'YAML読み込みに失敗しました';
+      alert(`YAMLインポートエラー:\n${message}`);
+    } finally {
+      setIsImporting(false);
+    }
   };
 
   /** Config を生成してプレビューパネルを開く */
@@ -81,6 +107,30 @@ export default function App() {
           className="bg-gray-800 text-white text-sm px-2 py-1 rounded border border-gray-600 focus:outline-none focus:border-blue-400 w-52"
           aria-label="トポロジ名"
         />
+        {/* 隠しファイル入力 */}
+        <input
+          ref={yamlInputRef}
+          type="file"
+          accept=".yaml,.yml"
+          className="hidden"
+          onChange={handleYamlImport}
+        />
+        <button
+          onClick={() => yamlInputRef.current?.click()}
+          disabled={isImporting}
+          className="text-xs bg-indigo-600 hover:bg-indigo-500 disabled:opacity-40 disabled:cursor-not-allowed px-3 py-1.5 rounded transition-colors whitespace-nowrap"
+          title="YAMLファイルを選択してAIがレイアウトを自動配置します"
+        >
+          {isImporting ? 'AI推論中...' : 'YAMLインポート (AI)'}
+        </button>
+        <button
+          onClick={deleteSelectedNode}
+          disabled={!selectedNodeId}
+          className="text-xs bg-red-700 hover:bg-red-600 disabled:opacity-40 disabled:cursor-not-allowed px-3 py-1.5 rounded transition-colors"
+          title="選択中のノードと接続リンクを削除"
+        >
+          ノード削除
+        </button>
         <button
           onClick={handleClear}
           className="text-xs bg-gray-700 hover:bg-gray-600 px-3 py-1.5 rounded transition-colors"

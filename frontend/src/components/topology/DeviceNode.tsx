@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import { Handle, Position, type NodeProps, type Node } from '@xyflow/react';
-import type { DeviceNodeData } from '../../types';
+import type { DeviceNodeData, InterfaceDefinition } from '../../types';
 
 type DeviceNodeType = Node<DeviceNodeData, 'deviceNode'>;
 
@@ -17,30 +17,72 @@ const DEVICE_TYPE_ICON: Record<string, string> = {
   firewall: '▣',
 };
 
-/** 最大4インターフェースを上・右・下・左に1つずつ配置 */
+/** portDirections がない場合のデフォルト順序：上・右・下・左 */
 const SIDE_POSITIONS = [Position.Top, Position.Right, Position.Bottom, Position.Left];
+const POSITION_KEY: Record<Position, string> = {
+  [Position.Top]: 'top',
+  [Position.Right]: 'right',
+  [Position.Bottom]: 'bottom',
+  [Position.Left]: 'left',
+};
+const KEY_POSITION: Record<string, Position> = {
+  top: Position.Top,
+  right: Position.Right,
+  bottom: Position.Bottom,
+  left: Position.Left,
+};
 
 function DeviceNode({ data, selected }: NodeProps<DeviceNodeType>) {
   const color = VENDOR_COLORS[data.template.vendor] ?? '#6b7280';
   const icon = DEVICE_TYPE_ICON[data.template.device_type] ?? '○';
   const dataInterfaces = data.template.interfaces.filter((i) => i.type !== 'management');
 
+  /** 各インターフェースのポート方向を決定する */
+  const getPosition = (iface: InterfaceDefinition, index: number): Position => {
+    const dir = (data.portDirections as Record<string, string> | undefined)?.[iface.name];
+    return dir ? (KEY_POSITION[dir] ?? SIDE_POSITIONS[index % 4]) : SIDE_POSITIONS[index % 4];
+  };
+
+  /** 同じ辺に複数ハンドルがある場合のオフセット計算用にグループ化 */
+  const sideGroups: Record<string, string[]> = { top: [], right: [], bottom: [], left: [] };
+  dataInterfaces.forEach((iface, index) => {
+    const pos = getPosition(iface, index);
+    sideGroups[POSITION_KEY[pos]].push(iface.name);
+  });
+
+  /** 同じ辺のハンドルを等間隔にオフセットする style を返す */
+  const getHandleStyle = (ifaceName: string, position: Position): React.CSSProperties => {
+    const key = POSITION_KEY[position];
+    const siblings = sideGroups[key];
+    if (siblings.length <= 1) return {};
+    const idx = siblings.indexOf(ifaceName);
+    const pct = ((idx + 1) / (siblings.length + 1)) * 100;
+    if (position === Position.Top || position === Position.Bottom) {
+      return { left: `${pct}%`, transform: 'translateX(-50%)' };
+    }
+    return { top: `${pct}%`, transform: 'translateY(-50%)' };
+  };
+
   return (
     <div
       style={{ borderColor: selected ? '#3b82f6' : '#d1d5db' }}
       className="rounded-lg border-2 bg-white shadow-md w-36 select-none"
     >
-      {/* インターフェースごとに Handle を配置（上右下左を順番に使用） */}
-      {dataInterfaces.map((iface, index) => (
-        <Handle
-          key={iface.name}
-          id={String(iface.slot ?? index)}
-          type="source"
-          position={SIDE_POSITIONS[index % 4]}
-          title={iface.name}
-          className="!w-3 !h-3 !bg-gray-400 hover:!bg-blue-500 transition-colors"
-        />
-      ))}
+      {/* インターフェースごとに Handle を配置 */}
+      {dataInterfaces.map((iface, index) => {
+        const position = getPosition(iface, index);
+        return (
+          <Handle
+            key={iface.name}
+            id={String(iface.slot ?? index)}
+            type="source"
+            position={position}
+            title={iface.name}
+            style={getHandleStyle(iface.name, position)}
+            className="!w-3 !h-3 !bg-gray-400 hover:!bg-blue-500 transition-colors"
+          />
+        );
+      })}
 
       {/* ベンダーカラーヘッダー */}
       <div

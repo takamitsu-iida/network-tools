@@ -37,4 +37,28 @@ export interface DeviceNodeData extends Record<string, unknown> {
   label: string;
   template: DeviceTemplate;
   interfaces: Record<string, InterfaceSettings>;
+  /** AIレイアウト生成時に付与されるポート方向マップ (interface name -> 'top'|'right'|'bottom'|'left') */
+  portDirections?: Record<string, string>;
+}
+
+// ---------- YAML Layout API ----------
+
+export interface YamlLayoutNode {
+  id: string;
+  type: string;
+  position: { x: number; y: number };
+  data: DeviceNodeData;
+}
+
+export interface YamlLayoutEdge {
+  id: string;
+  source: string;
+  sourceHandle: string;
+  target: string;
+  targetHandle: string;
+}
+
+export interface YamlLayoutResponse {
+  nodes: YamlLayoutNode[];
+  edges: YamlLayoutEdge[];
 }

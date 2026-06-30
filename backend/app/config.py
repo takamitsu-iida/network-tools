@@ -9,6 +9,8 @@ class Settings(BaseSettings):
     cml_password: str = "admin"
     cml_ssl_verify: bool = False
 
+    openai_api_key: str = ""
+
     templates_dir: str = "templates"
     config_templates_dir: str = "config_templates"
 

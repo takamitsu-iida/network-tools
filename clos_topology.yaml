@@ -1,0 +1,357 @@
+# CLOS (Spine-Leaf) トポロジ定義
+# スパイン: 2台 / リーフ: 24台 / リンク: 48本 (各リーフが全スパインに接続)
+#
+# 構成イメージ:
+#        Spine-1          Spine-2
+#     │ │ │ ... │ │ │   │ │ │ ... │ │ │
+#   Leaf-01 ~ Leaf-24 (各リーフが Spine-1/2 の両方に uplink)
+
+nodes:
+  # ─── スパインスイッチ ─────────────────────────────────────────────────
+  - id: spine-1
+    template: cisco/nxosv_switch
+    label: "Spine-1"
+
+  - id: spine-2
+    template: cisco/nxosv_switch
+    label: "Spine-2"
+
+  # ─── リーフスイッチ ───────────────────────────────────────────────────
+  - id: leaf-01
+    template: cisco/nxosv_switch
+    label: "Leaf-01"
+
+  - id: leaf-02
+    template: cisco/nxosv_switch
+    label: "Leaf-02"
+
+  - id: leaf-03
+    template: cisco/nxosv_switch
+    label: "Leaf-03"
+
+  - id: leaf-04
+    template: cisco/nxosv_switch
+    label: "Leaf-04"
+
+  - id: leaf-05
+    template: cisco/nxosv_switch
+    label: "Leaf-05"
+
+  - id: leaf-06
+    template: cisco/nxosv_switch
+    label: "Leaf-06"
+
+  - id: leaf-07
+    template: cisco/nxosv_switch
+    label: "Leaf-07"
+
+  - id: leaf-08
+    template: cisco/nxosv_switch
+    label: "Leaf-08"
+
+  - id: leaf-09
+    template: cisco/nxosv_switch
+    label: "Leaf-09"
+
+  - id: leaf-10
+    template: cisco/nxosv_switch
+    label: "Leaf-10"
+
+  - id: leaf-11
+    template: cisco/nxosv_switch
+    label: "Leaf-11"
+
+  - id: leaf-12
+    template: cisco/nxosv_switch
+    label: "Leaf-12"
+
+  - id: leaf-13
+    template: cisco/nxosv_switch
+    label: "Leaf-13"
+
+  - id: leaf-14
+    template: cisco/nxosv_switch
+    label: "Leaf-14"
+
+  - id: leaf-15
+    template: cisco/nxosv_switch
+    label: "Leaf-15"
+
+  - id: leaf-16
+    template: cisco/nxosv_switch
+    label: "Leaf-16"
+
+  - id: leaf-17
+    template: cisco/nxosv_switch
+    label: "Leaf-17"
+
+  - id: leaf-18
+    template: cisco/nxosv_switch
+    label: "Leaf-18"
+
+  - id: leaf-19
+    template: cisco/nxosv_switch
+    label: "Leaf-19"
+
+  - id: leaf-20
+    template: cisco/nxosv_switch
+    label: "Leaf-20"
+
+  - id: leaf-21
+    template: cisco/nxosv_switch
+    label: "Leaf-21"
+
+  - id: leaf-22
+    template: cisco/nxosv_switch
+    label: "Leaf-22"
+
+  - id: leaf-23
+    template: cisco/nxosv_switch
+    label: "Leaf-23"
+
+  - id: leaf-24
+    template: cisco/nxosv_switch
+    label: "Leaf-24"
+
+links:
+  # ─── Spine-1 ↔ 全リーフ ──────────────────────────────────────────────
+  - source: spine-1
+    source_interface: Ethernet1/1
+    target: leaf-01
+    target_interface: Ethernet1/1
+
+  - source: spine-1
+    source_interface: Ethernet1/2
+    target: leaf-02
+    target_interface: Ethernet1/1
+
+  - source: spine-1
+    source_interface: Ethernet1/3
+    target: leaf-03
+    target_interface: Ethernet1/1
+
+  - source: spine-1
+    source_interface: Ethernet1/4
+    target: leaf-04
+    target_interface: Ethernet1/1
+
+  - source: spine-1
+    source_interface: Ethernet1/5
+    target: leaf-05
+    target_interface: Ethernet1/1
+
+  - source: spine-1
+    source_interface: Ethernet1/6
+    target: leaf-06
+    target_interface: Ethernet1/1
+
+  - source: spine-1
+    source_interface: Ethernet1/7
+    target: leaf-07
+    target_interface: Ethernet1/1
+
+  - source: spine-1
+    source_interface: Ethernet1/8
+    target: leaf-08
+    target_interface: Ethernet1/1
+
+  - source: spine-1
+    source_interface: Ethernet1/9
+    target: leaf-09
+    target_interface: Ethernet1/1
+
+  - source: spine-1
+    source_interface: Ethernet1/10
+    target: leaf-10
+    target_interface: Ethernet1/1
+
+  - source: spine-1
+    source_interface: Ethernet1/11
+    target: leaf-11
+    target_interface: Ethernet1/1
+
+  - source: spine-1
+    source_interface: Ethernet1/12
+    target: leaf-12
+    target_interface: Ethernet1/1
+
+  - source: spine-1
+    source_interface: Ethernet1/13
+    target: leaf-13
+    target_interface: Ethernet1/1
+
+  - source: spine-1
+    source_interface: Ethernet1/14
+    target: leaf-14
+    target_interface: Ethernet1/1
+
+  - source: spine-1
+    source_interface: Ethernet1/15
+    target: leaf-15
+    target_interface: Ethernet1/1
+
+  - source: spine-1
+    source_interface: Ethernet1/16
+    target: leaf-16
+    target_interface: Ethernet1/1
+
+  - source: spine-1
+    source_interface: Ethernet1/17
+    target: leaf-17
+    target_interface: Ethernet1/1
+
+  - source: spine-1
+    source_interface: Ethernet1/18
+    target: leaf-18
+    target_interface: Ethernet1/1
+
+  - source: spine-1
+    source_interface: Ethernet1/19
+    target: leaf-19
+    target_interface: Ethernet1/1
+
+  - source: spine-1
+    source_interface: Ethernet1/20
+    target: leaf-20
+    target_interface: Ethernet1/1
+
+  - source: spine-1
+    source_interface: Ethernet1/21
+    target: leaf-21
+    target_interface: Ethernet1/1
+
+  - source: spine-1
+    source_interface: Ethernet1/22
+    target: leaf-22
+    target_interface: Ethernet1/1
+
+  - source: spine-1
+    source_interface: Ethernet1/23
+    target: leaf-23
+    target_interface: Ethernet1/1
+
+  - source: spine-1
+    source_interface: Ethernet1/24
+    target: leaf-24
+    target_interface: Ethernet1/1
+
+  # ─── Spine-2 ↔ 全リーフ ──────────────────────────────────────────────
+  - source: spine-2
+    source_interface: Ethernet1/1
+    target: leaf-01
+    target_interface: Ethernet1/2
+
+  - source: spine-2
+    source_interface: Ethernet1/2
+    target: leaf-02
+    target_interface: Ethernet1/2
+
+  - source: spine-2
+    source_interface: Ethernet1/3
+    target: leaf-03
+    target_interface: Ethernet1/2
+
+  - source: spine-2
+    source_interface: Ethernet1/4
+    target: leaf-04
+    target_interface: Ethernet1/2
+
+  - source: spine-2
+    source_interface: Ethernet1/5
+    target: leaf-05
+    target_interface: Ethernet1/2
+
+  - source: spine-2
+    source_interface: Ethernet1/6
+    target: leaf-06
+    target_interface: Ethernet1/2
+
+  - source: spine-2
+    source_interface: Ethernet1/7
+    target: leaf-07
+    target_interface: Ethernet1/2
+
+  - source: spine-2
+    source_interface: Ethernet1/8
+    target: leaf-08
+    target_interface: Ethernet1/2
+
+  - source: spine-2
+    source_interface: Ethernet1/9
+    target: leaf-09
+    target_interface: Ethernet1/2
+
+  - source: spine-2
+    source_interface: Ethernet1/10
+    target: leaf-10
+    target_interface: Ethernet1/2
+
+  - source: spine-2
+    source_interface: Ethernet1/11
+    target: leaf-11
+    target_interface: Ethernet1/2
+
+  - source: spine-2
+    source_interface: Ethernet1/12
+    target: leaf-12
+    target_interface: Ethernet1/2
+
+  - source: spine-2
+    source_interface: Ethernet1/13
+    target: leaf-13
+    target_interface: Ethernet1/2
+
+  - source: spine-2
+    source_interface: Ethernet1/14
+    target: leaf-14
+    target_interface: Ethernet1/2
+
+  - source: spine-2
+    source_interface: Ethernet1/15
+    target: leaf-15
+    target_interface: Ethernet1/2
+
+  - source: spine-2
+    source_interface: Ethernet1/16
+    target: leaf-16
+    target_interface: Ethernet1/2
+
+  - source: spine-2
+    source_interface: Ethernet1/17
+    target: leaf-17
+    target_interface: Ethernet1/2
+
+  - source: spine-2
+    source_interface: Ethernet1/18
+    target: leaf-18
+    target_interface: Ethernet1/2
+
+  - source: spine-2
+    source_interface: Ethernet1/19
+    target: leaf-19
+    target_interface: Ethernet1/2
+
+  - source: spine-2
+    source_interface: Ethernet1/20
+    target: leaf-20
+    target_interface: Ethernet1/2
+
+  - source: spine-2
+    source_interface: Ethernet1/21
+    target: leaf-21
+    target_interface: Ethernet1/2
+
+  - source: spine-2
+    source_interface: Ethernet1/22
+    target: leaf-22
+    target_interface: Ethernet1/2
+
+  - source: spine-2
+    source_interface: Ethernet1/23
+    target: leaf-23
+    target_interface: Ethernet1/2
+
+  - source: spine-2
+    source_interface: Ethernet1/24
+    target: leaf-24
+    target_interface: Ethernet1/2

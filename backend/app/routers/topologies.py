@@ -1,5 +1,7 @@
 from fastapi import APIRouter, HTTPException
 
+from fastapi.responses import JSONResponse
+
 from app.schemas.topology import (
     LinkCreate,
     LinkResponse,
@@ -9,8 +11,10 @@ from app.schemas.topology import (
     TopologyImport,
     TopologyResponse,
     TopologySummary,
+    YamlLayoutRequest,
 )
 from app.services.cml_client import cml_client
+from app.services.layout_generator import generate_layout_from_yaml
 
 router = APIRouter(prefix="/topologies", tags=["topologies"])
 
@@ -31,7 +35,19 @@ def create_topology(data: TopologyCreate) -> dict:
         raise HTTPException(status_code=502, detail=f"CML connection error: {exc}") from exc
 
 
-# NOTE: /import は /{lab_id} より先に宣言することで static パスを優先させる
+# NOTE: static パスは /{lab_id} より先に宣言する
+@router.post("/yaml-layout", status_code=200)
+def yaml_layout(data: YamlLayoutRequest) -> JSONResponse:
+    """YAMLトポロジ定義をOpenAIで推論してReactFlow形式のレイアウトを返す"""
+    try:
+        result = generate_layout_from_yaml(data.yaml_content)
+        return JSONResponse(content=result)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"レイアウト生成に失敗しました: {exc}") from exc
+
+
 @router.post("/import", response_model=TopologySummary, status_code=201)
 def import_topology(data: TopologyImport) -> dict:
     try:

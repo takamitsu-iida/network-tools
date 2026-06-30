@@ -20,6 +20,7 @@ interface TopologyState {
   onNodesChange: (changes: NodeChange[]) => void;
   onEdgesChange: (changes: EdgeChange[]) => void;
   setSelectedNodeId: (id: string | null) => void;
+  deleteSelectedNode: () => void;
   updateNodeLabel: (nodeId: string, label: string) => void;
   updateNodeInterfaceSettings: (
     nodeId: string,
@@ -47,6 +48,18 @@ export const useTopologyStore = create<TopologyState>((set) => ({
     set((s) => ({ edges: applyEdgeChanges(changes, s.edges) })),
 
   setSelectedNodeId: (id) => set({ selectedNodeId: id }),
+
+  deleteSelectedNode: () =>
+    set((s) => {
+      if (!s.selectedNodeId) return s;
+      return {
+        nodes: s.nodes.filter((n) => n.id !== s.selectedNodeId),
+        edges: s.edges.filter(
+          (e) => e.source !== s.selectedNodeId && e.target !== s.selectedNodeId,
+        ),
+        selectedNodeId: null,
+      };
+    }),
 
   updateNodeLabel: (nodeId, label) =>
     set((s) => ({

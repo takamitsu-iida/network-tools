@@ -122,8 +122,8 @@ export default function TopologyEditor() {
         connectionMode={ConnectionMode.Loose}
         onInit={setRfInstance}
         defaultEdgeOptions={{
-          type: 'smoothstep',
-          style: { stroke: '#64748b', strokeWidth: 2 },
+          type: 'bezier',
+          style: { stroke: '#64748b', strokeWidth: 1.5 },
         }}
         fitView
       >

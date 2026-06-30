@@ -57,3 +57,7 @@ class TopologySummary(BaseModel):
 
 class TopologyImport(BaseModel):
     yaml_content: str = Field(..., description="CML topology YAML content")
+
+
+class YamlLayoutRequest(BaseModel):
+    yaml_content: str = Field(..., description="ネットワークトポロジ定義YAML")

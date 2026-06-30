@@ -1,0 +1,54 @@
+# ネットワークトポロジ定義サンプル
+# YAMLインポート (AI) ボタンからこのファイルを読み込むと
+# AIがノード配置・ポート方向を自動決定してGUI表示します
+
+nodes:
+  - id: core-router
+    template: cisco/iosv_router
+    label: "Core Router"
+
+  - id: dist-sw1
+    template: cisco/nxosv_switch
+    label: "Dist-SW1"
+
+  - id: dist-sw2
+    template: cisco/nxosv_switch
+    label: "Dist-SW2"
+
+  - id: access-sw1
+    template: cisco/nxosv_switch
+    label: "Access-SW1"
+
+  - id: access-sw2
+    template: cisco/nxosv_switch
+    label: "Access-SW2"
+
+  - id: fw1
+    template: fortinet/fortigate
+    label: "Firewall"
+
+links:
+  - source: core-router
+    source_interface: GigabitEthernet0/0
+    target: dist-sw1
+    target_interface: Ethernet1/1
+
+  - source: core-router
+    source_interface: GigabitEthernet0/1
+    target: dist-sw2
+    target_interface: Ethernet1/1
+
+  - source: dist-sw1
+    source_interface: Ethernet1/2
+    target: access-sw1
+    target_interface: Ethernet1/1
+
+  - source: dist-sw2
+    source_interface: Ethernet1/2
+    target: access-sw2
+    target_interface: Ethernet1/1
+
+  - source: core-router
+    source_interface: GigabitEthernet0/2
+    target: fw1
+    target_interface: port1
